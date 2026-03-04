@@ -1,0 +1,8 @@
+node_modules/
+src/
+.oxfmtrc.json
+.git*
+*.ts
+!*.d.ts
+bun.lock
+tsconfig.build.json

@@ -1,14 +1,46 @@
 {
 	"name": "opencode-notification",
+	"version": "0.0.1",
+	"description": "OpenCode plugin for simple system notifications when permissions are needed, generation completes, or errors occur",
+	"keywords": [
+		"notification",
+		"opencode",
+		"opencode-plugin",
+		"system-notification"
+	],
+	"license": "MIT",
+	"author": "",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/IdrisGit/opencode-notification.git"
+	},
+	"files": [
+		"dist"
+	],
 	"type": "module",
-	"module": "index.ts",
+	"main": "dist/index.js",
+	"module": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js"
+		}
+	},
+	"scripts": {
+		"build": "bun run clean && bun build index.ts --outdir dist --target bun --format esm && bunx tsc -p tsconfig.build.json --emitDeclarationOnly",
+		"clean": "rm -rf dist",
+		"lint": "oxlint .",
+		"format": "oxfmt ."
+	},
 	"dependencies": {
 		"@opencode-ai/plugin": "^1.2.16"
 	},
 	"devDependencies": {
 		"@types/bun": "latest",
 		"oxfmt": "^0.36.0",
-		"oxlint": "^1.51.0"
+		"oxlint": "^1.51.0",
+		"typescript": "^5"
 	},
 	"peerDependencies": {
 		"typescript": "^5"
