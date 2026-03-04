@@ -1,0 +1,16 @@
+{
+  "name": "opencode-notification",
+  "module": "index.ts",
+  "type": "module",
+  "devDependencies": {
+    "@types/bun": "latest",
+    "oxfmt": "^0.36.0",
+    "oxlint": "^1.51.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@opencode-ai/plugin": "^1.2.16"
+  }
+}
