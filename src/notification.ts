@@ -125,25 +125,6 @@ function notifyBell(): void {
   }
 }
 
-function notifyImmediate(title: string, message: string): void {
-  if (process.platform === "darwin") {
-    notifyMacOS(title, message);
-    return;
-  }
-
-  if (process.platform === "linux") {
-    notifyLinux(title, message);
-    return;
-  }
-
-  if (process.platform === "win32") {
-    notifyWindows(title, message);
-    return;
-  }
-
-  notifyBell();
-}
-
 export namespace Notification {
   export type Options = {
     title: string;
@@ -151,6 +132,21 @@ export namespace Notification {
   };
 
   export function notify({ title, message = "" }: Options): void {
-    notifyImmediate(title, message);
+    if (process.platform === "darwin") {
+      notifyMacOS(title, message);
+      return;
+    }
+
+    if (process.platform === "linux") {
+      notifyLinux(title, message);
+      return;
+    }
+
+    if (process.platform === "win32") {
+      notifyWindows(title, message);
+      return;
+    }
+
+    notifyBell();
   }
 }
