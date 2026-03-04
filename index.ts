@@ -1,14 +1,14 @@
 import path from "node:path";
 import type { Plugin } from "@opencode-ai/plugin";
-import { createNotificationQueue } from "@/notification-queue";
+import { createNotificationScheduler } from "@/notification-scheduler";
 
 export const SimpleNotificationPlugin: Plugin = async ({ client }) => {
-	const queue = createNotificationQueue();
+	const scheduler = createNotificationScheduler();
 	// Tracks sessions where assistant has responded since last user message
-	const activeSessions = new Map<string, boolean>();
+	const activeSessions = new Set<string>();
 
 	const cancelForSession = (sessionId: string) => {
-		queue.cancelForSession(sessionId);
+		scheduler.cancelForSession(sessionId);
 		activeSessions.delete(sessionId);
 	};
 
@@ -17,12 +17,12 @@ export const SimpleNotificationPlugin: Plugin = async ({ client }) => {
 			switch (event.type) {
 				case "session.idle": {
 					const sessionId = event.properties.sessionID;
-					if (activeSessions.get(sessionId)) {
+					if (activeSessions.has(sessionId)) {
 						const title = await client.session
 							.get({ path: { id: sessionId } })
 							.then((details) => details.data?.title)
 							.catch(() => undefined);
-						queue.schedule(sessionId, "Response ready", title ?? sessionId);
+						scheduler.schedule(sessionId, "Response ready", title ?? sessionId);
 					}
 					activeSessions.delete(sessionId);
 					break;
@@ -37,7 +37,7 @@ export const SimpleNotificationPlugin: Plugin = async ({ client }) => {
 								.catch(() => undefined)
 						: (event.properties.error?.data.message as string);
 					if (sessionId) {
-						queue.schedule(sessionId, "Session error", message ?? sessionId);
+						scheduler.schedule(sessionId, "Session error", message ?? sessionId);
 					}
 					break;
 				}
@@ -54,7 +54,7 @@ export const SimpleNotificationPlugin: Plugin = async ({ client }) => {
 						}))
 						.catch(() => undefined);
 					const projectName = path.basename(session?.directory ?? "");
-					queue.schedule(
+					scheduler.schedule(
 						sessionId,
 						"Permission Asked",
 						`${session?.title} in ${projectName} needs permission`,
@@ -74,7 +74,7 @@ export const SimpleNotificationPlugin: Plugin = async ({ client }) => {
 						}))
 						.catch(() => undefined);
 					const projectName = path.basename(session?.directory ?? "");
-					queue.schedule(
+					scheduler.schedule(
 						sessionId,
 						"Question",
 						`${session?.title} in ${projectName} has a question`,
@@ -92,20 +92,12 @@ export const SimpleNotificationPlugin: Plugin = async ({ client }) => {
 					break;
 				}
 
-				case "message.part.updated": {
-					const part = event.properties.part;
-					const sessionId = part.sessionID;
-					const partType = part.type;
-					if (partType === "text" || partType === "reasoning") {
-						activeSessions.set(sessionId, true);
-					}
-					break;
-				}
-
 				case "message.updated": {
 					const info = event.properties.info;
 					if (info.role === "user") {
 						cancelForSession(info.sessionID);
+					} else if (info.role === "assistant") {
+						activeSessions.add(info.sessionID);
 					}
 					break;
 				}
@@ -127,7 +119,7 @@ export const SimpleNotificationPlugin: Plugin = async ({ client }) => {
 		},
 
 		destroy: () => {
-			queue.cancelAll();
+			scheduler.cancelAll();
 			activeSessions.clear();
 		},
 	};
