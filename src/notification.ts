@@ -10,9 +10,9 @@ const terminalMap: Record<string, { icon: string; appName: string }> = {
   konsole: { icon: "utilities-terminal", appName: "Konsole" },
 };
 
-let cachedTerminal: { icon: string; appName: string } | null | undefined;
-
 function getLinuxTerminalInfo(): { icon: string; appName: string } | null {
+  let cachedTerminal: { icon: string; appName: string } | null | undefined;
+
   if (process.platform !== "linux") return null;
   if (cachedTerminal !== undefined) return cachedTerminal;
 
@@ -26,7 +26,7 @@ function getLinuxTerminalInfo(): { icon: string; appName: string } | null {
   for (let i = 0; i < 3 && currentPid > 1; i++) {
     const status = readFileSync(`/proc/${currentPid}/status`, "utf-8");
     const ppidMatch = status.match(/PPid:\s*(\d+)/);
-    if (!ppidMatch) break;
+    if (!ppidMatch || !ppidMatch[1]) break;
     const ppid = parseInt(ppidMatch[1], 10);
     if (ppid <= 1 || ppid === currentPid) break;
 
