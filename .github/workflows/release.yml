@@ -12,6 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.release.tag_name }}
 
       - uses: oven-sh/setup-bun@v2
         with:
@@ -25,6 +27,12 @@ jobs:
 
       - name: Build
         run: bun run build
+      - name: Prevent duplicate publish
+        run: |
+          if npm view opencode-notification@$(node -p "require('./package.json').version") version; then
+            echo "Version already published"
+            exit 1
+          fi
 
       - uses: actions/setup-node@v4
         with:
