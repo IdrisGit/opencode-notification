@@ -95,7 +95,13 @@ export const SimpleNotificationPlugin: Plugin = async ({ client }) => {
 				case "message.updated": {
 					const info = event.properties.info;
 					if (info.role === "user") {
-						cancelForSession(info.sessionID);
+						// Only cancel for real user messages, not automatic system messages
+						// System messages have 'agent' or 'model' fields
+						const infoAny = info;
+						const isAutomaticMessage = infoAny.agent || infoAny.model;
+						if (!isAutomaticMessage) {
+							cancelForSession(info.sessionID);
+						}
 					} else if (info.role === "assistant") {
 						activeSessions.add(info.sessionID);
 					}
@@ -106,7 +112,7 @@ export const SimpleNotificationPlugin: Plugin = async ({ client }) => {
 					const status = event.properties.status;
 					const sessionId = event.properties.sessionID;
 					if (status.type === "busy") {
-						cancelForSession(sessionId);
+						scheduler.cancelForSession(sessionId);
 					}
 					break;
 				}
