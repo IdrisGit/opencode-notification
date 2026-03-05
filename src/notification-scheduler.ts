@@ -1,6 +1,6 @@
 import { Notification } from "@/notification";
 
-export const DELAY_MS = 30 * 1000;
+export const DELAY_MS = 10 * 1000;
 
 interface PendingNotification {
 	title: string;
