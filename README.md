@@ -92,4 +92,4 @@ If notifications do not appear on Linux, install a notification daemon and ensur
 
 ## License
 
-Apache-2.0. See `LICENSE`.
+[Apache-2.0](LICENSE).
