@@ -1,0 +1,114 @@
+{
+  "$id": "https://unpkg.com/opencode-notification@0.0.3/schema/notification-plugin.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "delay": {
+      "default": 15000,
+      "description": "Default notification delay in milliseconds",
+      "type": "number"
+    },
+    "enabled": {
+      "default": true,
+      "description": "Master switch to enable/disable all notifications",
+      "type": "boolean"
+    },
+    "response_ready": {
+      "default": {
+        "enabled": true
+      },
+      "description": "Notification when AI response is ready (session.idle event)",
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "default": true,
+          "description": "Enable notifications for this event type",
+          "type": "boolean"
+        },
+        "delay": {
+          "description": "Optional override for notification delay in milliseconds",
+          "type": "number"
+        }
+      },
+      "required": [
+        "enabled"
+      ],
+      "additionalProperties": false
+    },
+    "error": {
+      "default": {
+        "enabled": true
+      },
+      "description": "Notification on session error",
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "default": true,
+          "description": "Enable notifications for this event type",
+          "type": "boolean"
+        },
+        "delay": {
+          "description": "Optional override for notification delay in milliseconds",
+          "type": "number"
+        }
+      },
+      "required": [
+        "enabled"
+      ],
+      "additionalProperties": false
+    },
+    "permission_asked": {
+      "default": {
+        "enabled": true
+      },
+      "description": "Notification when permission is requested",
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "default": true,
+          "description": "Enable notifications for this event type",
+          "type": "boolean"
+        },
+        "delay": {
+          "description": "Optional override for notification delay in milliseconds",
+          "type": "number"
+        }
+      },
+      "required": [
+        "enabled"
+      ],
+      "additionalProperties": false
+    },
+    "question_asked": {
+      "default": {
+        "enabled": true
+      },
+      "description": "Notification when a question is asked",
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "default": true,
+          "description": "Enable notifications for this event type",
+          "type": "boolean"
+        },
+        "delay": {
+          "description": "Optional override for notification delay in milliseconds",
+          "type": "number"
+        }
+      },
+      "required": [
+        "enabled"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "delay",
+    "enabled",
+    "response_ready",
+    "error",
+    "permission_asked",
+    "question_asked"
+  ],
+  "additionalProperties": false
+}
