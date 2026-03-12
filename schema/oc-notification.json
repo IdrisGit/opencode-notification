@@ -29,11 +29,7 @@
           "description": "Optional override for notification delay in seconds",
           "type": "number"
         }
-      },
-      "required": [
-        "enabled"
-      ],
-      "additionalProperties": false
+      }
     },
     "error": {
       "default": {
@@ -51,11 +47,7 @@
           "description": "Optional override for notification delay in seconds",
           "type": "number"
         }
-      },
-      "required": [
-        "enabled"
-      ],
-      "additionalProperties": false
+      }
     },
     "permission_asked": {
       "default": {
@@ -73,11 +65,7 @@
           "description": "Optional override for notification delay in seconds",
           "type": "number"
         }
-      },
-      "required": [
-        "enabled"
-      ],
-      "additionalProperties": false
+      }
     },
     "question_asked": {
       "default": {
@@ -95,20 +83,11 @@
           "description": "Optional override for notification delay in seconds",
           "type": "number"
         }
-      },
-      "required": [
-        "enabled"
-      ],
-      "additionalProperties": false
+      }
+    },
+    "$schema": {
+      "type": "string",
+      "description": "JSON Schema URL for editor autocomplete and validation"
     }
-  },
-  "required": [
-    "delay",
-    "enabled",
-    "response_ready",
-    "error",
-    "permission_asked",
-    "question_asked"
-  ],
-  "additionalProperties": false
+  }
 }

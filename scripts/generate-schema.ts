@@ -8,9 +8,16 @@ const packageJson = await Bun.file(packageJsonPath).json();
 const version = packageJson.version;
 
 const jsonSchema = z.toJSONSchema(ConfigSchema, {
+	io: "input",
 	target: "draft-2020-12",
 	unrepresentable: "throw",
 });
+const rootSchema = jsonSchema as z.core.JSONSchema.ObjectSchema;
+rootSchema.properties ??= {};
+rootSchema.properties.$schema = {
+	type: "string",
+	description: "JSON Schema URL for editor autocomplete and validation",
+};
 
 // Add $id with versioned URL for npm/unpkg CDN
 // This allows users to reference specific schema versions
