@@ -1,6 +1,6 @@
 import * as z from "zod";
-import { ConfigSchema } from "../src/config/schema";
-import { CONFIG_FILE_NAME } from "../src/config/constants";
+import { CONFIG_FILE_NAME } from "@/config/constants";
+import { ConfigSchema } from "@/config/schema";
 
 // Read package.json to get version for schema $id
 const packageJsonPath = `${import.meta.dir}/../package.json`;
