@@ -1,5 +1,5 @@
-import type { Config, EventConfig } from "@/config/schema";
 import type { Event } from "@opencode-ai/sdk";
+import type { Config, EventConfig } from "@/config/schema";
 
 type EventType = Event["type"] | "permission.asked" | "permission.replied" | "question.asked";
 const EVENT_CONFIG_MAP: Record<string, keyof Config> = {
@@ -59,19 +59,16 @@ export function createResolvedConfig(config: Config): ResolvedConfig {
 			const rawEventConfig = configKey ? config[configKey] : undefined;
 			const eventConfig = isEventConfig(rawEventConfig) ? rawEventConfig : undefined;
 
-			if (!eventConfig) {
-				return config.enabled;
-			}
-
-			return eventConfig.enabled ?? true;
+			return eventConfig?.enabled ?? config.enabled;
 		},
 
 		getDelay(eventType: EventType): number {
 			const configKey = EVENT_CONFIG_MAP[eventType];
 			const rawEventConfig = configKey ? config[configKey] : undefined;
 			const eventConfig = isEventConfig(rawEventConfig) ? rawEventConfig : undefined;
+			const delayMS = eventConfig?.delay ?? config.delay;
 
-			return eventConfig?.delay ?? config.delay;
+			return delayMS * 1000;
 		},
 	};
 }
