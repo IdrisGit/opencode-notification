@@ -20,4 +20,5 @@ export const ConfigSchema = z.object({
 	),
 });
 
+export type EventConfig = z.infer<typeof EventConfigSchema>;
 export type Config = z.infer<typeof ConfigSchema>;

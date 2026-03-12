@@ -2,6 +2,16 @@ import { homedir } from "node:os";
 import { ConfigSchema, type Config } from "@/config/schema";
 
 /**
+ * Custom error class for configuration-related errors.
+ */
+export class ConfigError extends Error {
+	constructor(message: string) {
+		super(message);
+		this.name = "ConfigError";
+	}
+}
+
+/**
  * Recursively merges objects. Arrays are replaced, not merged.
  * Null/undefined values in source do not overwrite existing values.
  */
@@ -76,6 +86,14 @@ export async function discoverConfigFiles(projectRoot?: string): Promise<string[
 	return paths;
 }
 
+/**
+ * Loads and validates configuration from all discovered config files.
+ * Configs are merged in order of discovery (lower precedence first).
+ *
+ * @throws {ConfigError} If a config file has invalid JSON or validation fails.
+ *         This ensures the plugin fails fast on misconfiguration rather than
+ *         silently using defaults.
+ */
 export async function loadConfig(projectRoot?: string): Promise<Config> {
 	const filePaths = await discoverConfigFiles(projectRoot);
 	const configs: Record<string, unknown>[] = [];
@@ -86,23 +104,28 @@ export async function loadConfig(projectRoot?: string): Promise<Config> {
 			if (content && typeof content === "object") {
 				configs.push(content as Record<string, unknown>);
 			}
-		} catch {
-			// Log config loading errors - these are typically file not found or JSON parse errors
-			// which are recoverable (we'll use defaults)
+		} catch (error) {
+			// JSON parse errors are fatal - user has a config file but it's broken
+			if (error instanceof SyntaxError) {
+				throw new ConfigError(`Invalid JSON in ${filePath}: ${error.message}`);
+			}
+			// Other errors (e.g., file not readable) are also fatal
+			throw new ConfigError(
+				`Failed to read config file ${filePath}: ${error instanceof Error ? error.message : String(error)}`,
+			);
 		}
 	}
 
-	const mergedConfig = configs.reduce(
-		(acc, config) => deepMerge(acc as Record<string, unknown>, config),
-		{} as Record<string, unknown>,
+	const mergedConfig = configs.reduce<Record<string, unknown>>(
+		(acc, config) => deepMerge(acc, config),
+		{},
 	);
 
 	try {
 		return ConfigSchema.parse(mergedConfig);
 	} catch (error) {
-		// Config validation errors are logged but we continue with defaults
-		// This ensures the plugin remains functional even with invalid config
-		console.error("Config validation failed, using defaults:", error);
-		return ConfigSchema.parse({});
+		// Zod validation errors - rethrow as ConfigError for consistent error handling
+		const message = error instanceof Error ? error.message : String(error);
+		throw new ConfigError(`Config validation failed: ${message}`);
 	}
 }
