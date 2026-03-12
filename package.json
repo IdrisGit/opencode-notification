@@ -15,7 +15,8 @@
 		"url": "git+https://github.com/IdrisGit/opencode-notification.git"
 	},
 	"files": [
-		"dist"
+		"dist",
+		"schema"
 	],
 	"type": "module",
 	"main": "dist/index.js",
@@ -28,14 +29,17 @@
 		}
 	},
 	"scripts": {
-		"build": "bun run clean && bun build index.ts --outdir dist --target bun --format esm && bunx tsc -p tsconfig.build.json --emitDeclarationOnly",
+		"prepack": "bun run build",
+		"build": "bun run clean && bun run generate-schema && bun build index.ts --outdir dist --target bun --format esm && bunx tsc -p tsconfig.build.json --emitDeclarationOnly",
+		"generate-schema": "bun scripts/generate-schema.ts",
 		"clean": "rm -rf dist",
 		"lint": "oxlint .",
 		"fmt": "oxfmt",
 		"fmt:check": "oxfmt --check"
 	},
 	"dependencies": {
-		"@opencode-ai/plugin": "^1.2.16"
+		"@opencode-ai/plugin": "^1.2.16",
+		"zod": "^4.3.6"
 	},
 	"devDependencies": {
 		"@types/bun": "latest",

@@ -1,9 +1,25 @@
 import path from "node:path";
 import type { Plugin } from "@opencode-ai/plugin";
 import { createNotificationScheduler } from "@/notification-scheduler";
+import { loadConfig, ConfigError } from "@/config/loader";
+import { createResolvedConfig } from "@/config/resolver";
 
 export const SimpleNotificationPlugin: Plugin = async ({ client }) => {
-	const scheduler = createNotificationScheduler();
+	const config = await loadConfig().catch(async (error) => {
+		const message =
+			error instanceof ConfigError
+				? `Notification plugin config error: ${error.message}`
+				: `Notification plugin failed to load: ${error instanceof Error ? error.message : String(error)}`;
+
+		await client.tui.showToast({
+			body: { message, variant: "error" },
+		});
+
+		throw error;
+	});
+
+	const resolvedConfig = createResolvedConfig(config);
+	const scheduler = createNotificationScheduler(resolvedConfig);
 	// Tracks sessions where assistant has responded since last user message
 	const activeSessions = new Set<string>();
 
@@ -22,7 +38,7 @@ export const SimpleNotificationPlugin: Plugin = async ({ client }) => {
 							.get({ path: { id: sessionId } })
 							.then((details) => details.data?.title)
 							.catch(() => undefined);
-						scheduler.schedule(sessionId, "Response ready", title ?? sessionId);
+						scheduler.schedule(sessionId, "Response ready", title ?? sessionId, "session.idle");
 					}
 					activeSessions.delete(sessionId);
 					break;
@@ -37,7 +53,7 @@ export const SimpleNotificationPlugin: Plugin = async ({ client }) => {
 								.catch(() => undefined)
 						: (event.properties.error?.data.message as string);
 					if (sessionId) {
-						scheduler.schedule(sessionId, "Session error", message ?? sessionId);
+						scheduler.schedule(sessionId, "Session error", message ?? sessionId, "session.error");
 					}
 					break;
 				}
@@ -58,6 +74,7 @@ export const SimpleNotificationPlugin: Plugin = async ({ client }) => {
 						sessionId,
 						"Permission Asked",
 						`${session?.title} in ${projectName} needs permission`,
+						"permission.asked",
 					);
 					break;
 				}
@@ -78,6 +95,7 @@ export const SimpleNotificationPlugin: Plugin = async ({ client }) => {
 						sessionId,
 						"Question",
 						`${session?.title} in ${projectName} has a question`,
+						"question.asked",
 					);
 					break;
 				}
@@ -95,8 +113,6 @@ export const SimpleNotificationPlugin: Plugin = async ({ client }) => {
 				case "message.updated": {
 					const info = event.properties.info;
 					if (info.role === "user") {
-						// Only cancel for real user messages, not automatic system messages
-						// System messages have 'agent' or 'model' fields
 						const infoAny = info;
 						const isAutomaticMessage = infoAny.agent || infoAny.model;
 						if (!isAutomaticMessage) {
@@ -119,7 +135,6 @@ export const SimpleNotificationPlugin: Plugin = async ({ client }) => {
 
 				case "tui.prompt.append":
 				case "tui.command.execute":
-					// No sessionID in these events, can't cancel reliably
 					break;
 			}
 		},

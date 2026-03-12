@@ -19,14 +19,11 @@ jobs:
         with:
           bun-version: latest
 
-      - name: Install dependencies
-        run: bun install
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          registry-url: "https://registry.npmjs.org"
 
-      - name: Lint
-        run: bun run lint
-
-      - name: Build
-        run: bun run build
       - name: Prevent duplicate publish
         run: |
           if npm view opencode-notification@$(node -p "require('./package.json').version") version; then
@@ -34,10 +31,11 @@ jobs:
             exit 1
           fi
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "24"
-          registry-url: "https://registry.npmjs.org"
+      - name: Install dependencies
+        run: bun install
+
+      - name: Lint
+        run: bun run lint
 
       - name: Publish to npm
         run: npm publish --access public
