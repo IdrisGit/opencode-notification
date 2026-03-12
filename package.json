@@ -1,6 +1,6 @@
 {
 	"name": "opencode-notification",
-	"version": "0.0.3",
+	"version": "0.0.4",
 	"description": "OpenCode plugin for simple system notifications when permissions are needed, generation completes, or errors occur",
 	"keywords": [
 		"notification",
