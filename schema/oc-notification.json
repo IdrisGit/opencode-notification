@@ -1,11 +1,11 @@
 {
-  "$id": "https://unpkg.com/opencode-notification@0.0.3/schema/notification-plugin.json",
+  "$id": "https://unpkg.com/opencode-notification@0.0.3/schema/oc-notification.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "type": "object",
   "properties": {
     "delay": {
-      "default": 15000,
-      "description": "Default notification delay in milliseconds",
+      "default": 15,
+      "description": "Default notification delay in seconds",
       "type": "number"
     },
     "enabled": {
@@ -17,7 +17,7 @@
       "default": {
         "enabled": true
       },
-      "description": "Notification when AI response is ready (session.idle event)",
+      "description": "Notification when AI response is ready",
       "type": "object",
       "properties": {
         "enabled": {
@@ -26,7 +26,7 @@
           "type": "boolean"
         },
         "delay": {
-          "description": "Optional override for notification delay in milliseconds",
+          "description": "Optional override for notification delay in seconds",
           "type": "number"
         }
       },
@@ -48,7 +48,7 @@
           "type": "boolean"
         },
         "delay": {
-          "description": "Optional override for notification delay in milliseconds",
+          "description": "Optional override for notification delay in seconds",
           "type": "number"
         }
       },
@@ -70,7 +70,7 @@
           "type": "boolean"
         },
         "delay": {
-          "description": "Optional override for notification delay in milliseconds",
+          "description": "Optional override for notification delay in seconds",
           "type": "number"
         }
       },
@@ -92,7 +92,7 @@
           "type": "boolean"
         },
         "delay": {
-          "description": "Optional override for notification delay in milliseconds",
+          "description": "Optional override for notification delay in seconds",
           "type": "number"
         }
       },
