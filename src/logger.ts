@@ -20,7 +20,7 @@ export function createLogger(service: string): Logger {
 				level,
 				service,
 				message,
-				...extra,
+				extra,
 			}) + "\n";
 
 		const file = Bun.file(LOG_FILE);
