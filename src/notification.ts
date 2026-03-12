@@ -10,9 +10,10 @@ const terminalMap: Record<string, { icon: string; appName: string }> = {
 	konsole: { icon: "utilities-terminal", appName: "Konsole" },
 };
 
-function getLinuxTerminalInfo(): { icon: string; appName: string } | null {
-	let cachedTerminal: { icon: string; appName: string } | null | undefined;
+// Cache terminal info at module level to persist across calls
+let cachedTerminal: { icon: string; appName: string } | null | undefined;
 
+function getLinuxTerminalInfo(): { icon: string; appName: string } | null {
 	if (process.platform !== "linux") return null;
 	if (cachedTerminal !== undefined) return cachedTerminal;
 
