@@ -27,6 +27,7 @@ const schemaWithId = {
 };
 
 const outputPath = `${import.meta.dir}/../schema/${CONFIG_FILE_NAME}`;
-await Bun.write(outputPath, JSON.stringify(schemaWithId, null, 2));
+const jsonString = `${JSON.stringify(schemaWithId, null, "\t")}\n`;
+await Bun.write(outputPath, jsonString);
 
 console.log(`Generated JSON schema: schema/${CONFIG_FILE_NAME} (version ${version})`);
