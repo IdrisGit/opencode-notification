@@ -1,5 +1,5 @@
 {
-	"$id": "https://unpkg.com/opencode-notification@0.0.3/schema/oc-notification.json",
+	"$id": "https://unpkg.com/opencode-notification@0.0.5/schema/oc-notification.json",
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
 	"type": "object",
 	"properties": {
