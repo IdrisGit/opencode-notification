@@ -30,7 +30,7 @@ export function createResolvedConfig(config: Config): ResolvedConfig {
 				? (config[configKey] as EventConfig)
 				: undefined;
 
-			if (eventConfig?.enabled) {
+			if (eventConfig?.enabled !== undefined) {
 				return eventConfig.enabled;
 			}
 
