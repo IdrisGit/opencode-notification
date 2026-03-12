@@ -95,7 +95,7 @@ export async function discoverConfigFiles(projectRoot?: string): Promise<string[
  *         This ensures the plugin fails fast on misconfiguration rather than
  *         silently using defaults.
  */
-export async function loadConfig(projectRoot?: string): Promise<Config> {
+export async function loadConfig(projectRoot: string): Promise<Config> {
 	const filePaths = await discoverConfigFiles(projectRoot);
 	const configs: Record<string, unknown>[] = [];
 

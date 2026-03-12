@@ -10,9 +10,10 @@ const terminalMap: Record<string, { icon: string; appName: string }> = {
 	konsole: { icon: "utilities-terminal", appName: "Konsole" },
 };
 
-function getLinuxTerminalInfo(): { icon: string; appName: string } | null {
-	let cachedTerminal: { icon: string; appName: string } | null | undefined;
+// Cache terminal info at module level to persist across calls
+let cachedTerminal: { icon: string; appName: string } | null | undefined;
 
+function getLinuxTerminalInfo(): { icon: string; appName: string } | null {
 	if (process.platform !== "linux") return null;
 	if (cachedTerminal !== undefined) return cachedTerminal;
 
@@ -24,20 +25,25 @@ function getLinuxTerminalInfo(): { icon: string; appName: string } | null {
 
 	let currentPid = process.pid;
 	for (let i = 0; i < 3 && currentPid > 1; i++) {
-		const status = readFileSync(`/proc/${currentPid}/status`, "utf-8");
-		const ppidMatch = status.match(/PPid:\s*(\d+)/);
-		if (!ppidMatch || !ppidMatch[1]) break;
-		const ppid = parseInt(ppidMatch[1], 10);
-		if (ppid <= 1 || ppid === currentPid) break;
+		// /proc may be inaccessible in containers or restricted environments (EACCES/ENOENT)
+		try {
+			const status = readFileSync(`/proc/${currentPid}/status`, "utf-8");
+			const ppidMatch = status.match(/PPid:\s*(\d+)/);
+			if (!ppidMatch || !ppidMatch[1]) break;
+			const ppid = parseInt(ppidMatch[1], 10);
+			if (ppid <= 1 || ppid === currentPid) break;
 
-		const comm = readFileSync(`/proc/${ppid}/comm`, "utf-8").trim();
-		const normalized = comm.replace(/-/g, "_");
-		const result = terminalMap[comm] ?? terminalMap[normalized] ?? null;
-		if (result) {
-			cachedTerminal = result;
-			return result;
+			const comm = readFileSync(`/proc/${ppid}/comm`, "utf-8").trim();
+			const normalized = comm.replace(/-/g, "_");
+			const result = terminalMap[comm] ?? terminalMap[normalized] ?? null;
+			if (result) {
+				cachedTerminal = result;
+				return result;
+			}
+			currentPid = ppid;
+		} catch {
+			break;
 		}
-		currentPid = ppid;
 	}
 
 	cachedTerminal = null;

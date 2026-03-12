@@ -4,8 +4,8 @@ import { createNotificationScheduler } from "@/notification-scheduler";
 import { loadConfig, ConfigError } from "@/config/loader";
 import { createResolvedConfig } from "@/config/resolver";
 
-export const SimpleNotificationPlugin: Plugin = async ({ client }) => {
-	const config = await loadConfig().catch(async (error) => {
+export const SimpleNotificationPlugin: Plugin = async ({ client, directory }) => {
+	const config = await loadConfig(directory).catch(async (error) => {
 		const message =
 			error instanceof ConfigError
 				? `Notification plugin config error: ${error.message}`
