@@ -1,93 +1,93 @@
 {
-  "$id": "https://unpkg.com/opencode-notification@0.0.3/schema/oc-notification.json",
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "type": "object",
-  "properties": {
-    "delay": {
-      "default": 15,
-      "description": "Default notification delay in seconds",
-      "type": "number"
-    },
-    "enabled": {
-      "default": true,
-      "description": "Master switch to enable/disable all notifications",
-      "type": "boolean"
-    },
-    "response_ready": {
-      "default": {
-        "enabled": true
-      },
-      "description": "Notification when AI response is ready",
-      "type": "object",
-      "properties": {
-        "enabled": {
-          "default": true,
-          "description": "Enable notifications for this event type",
-          "type": "boolean"
-        },
-        "delay": {
-          "description": "Optional override for notification delay in seconds",
-          "type": "number"
-        }
-      }
-    },
-    "error": {
-      "default": {
-        "enabled": true
-      },
-      "description": "Notification on session error",
-      "type": "object",
-      "properties": {
-        "enabled": {
-          "default": true,
-          "description": "Enable notifications for this event type",
-          "type": "boolean"
-        },
-        "delay": {
-          "description": "Optional override for notification delay in seconds",
-          "type": "number"
-        }
-      }
-    },
-    "permission_asked": {
-      "default": {
-        "enabled": true
-      },
-      "description": "Notification when permission is requested",
-      "type": "object",
-      "properties": {
-        "enabled": {
-          "default": true,
-          "description": "Enable notifications for this event type",
-          "type": "boolean"
-        },
-        "delay": {
-          "description": "Optional override for notification delay in seconds",
-          "type": "number"
-        }
-      }
-    },
-    "question_asked": {
-      "default": {
-        "enabled": true
-      },
-      "description": "Notification when a question is asked",
-      "type": "object",
-      "properties": {
-        "enabled": {
-          "default": true,
-          "description": "Enable notifications for this event type",
-          "type": "boolean"
-        },
-        "delay": {
-          "description": "Optional override for notification delay in seconds",
-          "type": "number"
-        }
-      }
-    },
-    "$schema": {
-      "type": "string",
-      "description": "JSON Schema URL for editor autocomplete and validation"
-    }
-  }
+	"$id": "https://unpkg.com/opencode-notification@0.0.3/schema/oc-notification.json",
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"type": "object",
+	"properties": {
+		"delay": {
+			"default": 15,
+			"description": "Default notification delay in seconds",
+			"type": "number"
+		},
+		"enabled": {
+			"default": true,
+			"description": "Master switch to enable/disable all notifications",
+			"type": "boolean"
+		},
+		"response_ready": {
+			"default": {
+				"enabled": true
+			},
+			"description": "Notification when AI response is ready",
+			"type": "object",
+			"properties": {
+				"enabled": {
+					"default": true,
+					"description": "Enable notifications for this event type",
+					"type": "boolean"
+				},
+				"delay": {
+					"description": "Optional override for notification delay in seconds",
+					"type": "number"
+				}
+			}
+		},
+		"error": {
+			"default": {
+				"enabled": true
+			},
+			"description": "Notification on session error",
+			"type": "object",
+			"properties": {
+				"enabled": {
+					"default": true,
+					"description": "Enable notifications for this event type",
+					"type": "boolean"
+				},
+				"delay": {
+					"description": "Optional override for notification delay in seconds",
+					"type": "number"
+				}
+			}
+		},
+		"permission_asked": {
+			"default": {
+				"enabled": true
+			},
+			"description": "Notification when permission is requested",
+			"type": "object",
+			"properties": {
+				"enabled": {
+					"default": true,
+					"description": "Enable notifications for this event type",
+					"type": "boolean"
+				},
+				"delay": {
+					"description": "Optional override for notification delay in seconds",
+					"type": "number"
+				}
+			}
+		},
+		"question_asked": {
+			"default": {
+				"enabled": true
+			},
+			"description": "Notification when a question is asked",
+			"type": "object",
+			"properties": {
+				"enabled": {
+					"default": true,
+					"description": "Enable notifications for this event type",
+					"type": "boolean"
+				},
+				"delay": {
+					"description": "Optional override for notification delay in seconds",
+					"type": "number"
+				}
+			}
+		},
+		"$schema": {
+			"type": "string",
+			"description": "JSON Schema URL for editor autocomplete and validation"
+		}
+	}
 }
