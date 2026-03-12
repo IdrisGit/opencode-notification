@@ -1,5 +1,6 @@
 import { homedir } from "node:os";
 import { ConfigSchema, type Config } from "@/config/schema";
+import { CONFIG_FILE_NAME } from "@/config/constants";
 
 /**
  * Custom error class for configuration-related errors.
@@ -62,8 +63,8 @@ export async function discoverConfigFiles(projectRoot?: string): Promise<string[
 	const globalPath =
 		process.platform === "win32"
 			? // Convert forward slashes to backslashes for Windows paths (e.g., "a/b" -> "a\b")
-				`${process.env.APPDATA || homedir()}\\notification-plugin.json`.replace(/\//g, "\\") // windows
-			: `${process.env.XDG_CONFIG_HOME || `${homedir()}/.config`}/notification-plugin.json`; // linux/macos
+				`${process.env.APPDATA || homedir()}\\${CONFIG_FILE_NAME}`.replace(/\//g, "\\") // windows
+			: `${process.env.XDG_CONFIG_HOME || `${homedir()}/.config`}/${CONFIG_FILE_NAME}`; // linux/macos
 
 	if (await Bun.file(globalPath).exists()) {
 		paths.push(globalPath);
@@ -71,13 +72,13 @@ export async function discoverConfigFiles(projectRoot?: string): Promise<string[
 
 	// 2. Project root config
 	if (projectRoot) {
-		const projectPath = `${projectRoot}/notification-plugin.json`;
+		const projectPath = `${projectRoot}/${CONFIG_FILE_NAME}`;
 		if (await Bun.file(projectPath).exists()) {
 			paths.push(projectPath);
 		}
 
 		// 3. .opencode config
-		const dotOpenCodePath = `${projectRoot}/.opencode/notification-plugin.json`;
+		const dotOpenCodePath = `${projectRoot}/.opencode/${CONFIG_FILE_NAME}`;
 		if (await Bun.file(dotOpenCodePath).exists()) {
 			paths.push(dotOpenCodePath);
 		}
