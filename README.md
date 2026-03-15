@@ -1,6 +1,6 @@
 # opencode-notification
 
-OpenCode plugin for desktop notifications in TUI workflows.
+OpenCode plugin for desktop notifications in TUI.
 
 You get notifications when:
 
@@ -9,7 +9,11 @@ You get notifications when:
 - A question is asked
 - A session hits an error
 
-Designed for low-noise defaults, Claude Code inspired behavior, and OpenCode Desktop parity where possible.
+Designed for simple Claude Code inspired notifications.
+
+## Demo
+
+https://https://github.com/IdrisGit/opencode-notification/blob/main/docs/demo.mp4
 
 ## Install
 
