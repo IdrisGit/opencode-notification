@@ -13,7 +13,7 @@ Designed for simple Claude Code inspired notifications.
 
 ## Demo
 
-https://github.com/IdrisGit/opencode-notification/blob/main/docs/demo.mp4
+![Demo](docs/demo.gif)
 
 ## Install
 
